@@ -6,44 +6,10 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-<div class="container">
-  <ul class="comments">
-        <!-- Пример комментария с промежуточными данными -->
-    <li class="comment" data-likes='{"count": 3, "active": false}'>
-        <div class="comment-header">
-            <div>Глеб Фокин</div>
-            <div>12.02.22 12:18</div>
-        </div>
-        <div class="comment-body">
-            <div class="comment-text">
-              Это будет первый комментарий на этой странице
-            </div>
-        </div>
-        <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">3</span>
-              <button class="like-button"></button>
-            </div>
-        </div>
-    </li>
-    <li class="comment" data-likes='{"count": 75, "active": true}'>
-        <div class="comment-header">
-            <div>Варвара Н.</div>
-            <div>13.02.22 19:22</div>
-        </div>
-        <div class="comment-body">
-            <div class="comment-text">
-              Мне нравится как оформлена эта страница! ❤
-            </div>
-        </div>
-        <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
-            </div>
-        </div>
-    </li>
-   </ul>
+    <div class="container">
+      <ul class="comments">
+        <!-- Комментарии будут добавляться сюда -->
+      </ul>
       <div class="add-form">
         <input
           type="text"
@@ -60,86 +26,106 @@
           <button class="add-form-button">Написать</button>
         </div>
       </div>
-</div>
-  </body>
-  <script>
-    "use strict";
-    const nameInput = document.querySelector('.add-form-name');
-    const commentInput = document.querySelector('.add-form-text');
-    const addButton = document.querySelector('.add-form-button');
-    const commentsList = document.querySelector('.comments');
+    </div>
+    <script>
+      "use strict";
+      const nameInput = document.querySelector('.add-form-name');
+      const commentInput = document.querySelector('.add-form-text');
+      const addButton = document.querySelector('.add-form-button');
+      const commentsList = document.querySelector('.comments');
 
-    // Функция для получения текущей даты и времени
-    function getCurrentDateTime() {
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, '0');
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const year = String(now.getFullYear()).slice(-2);
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      return `${day}.${month}.${year} ${hours}:${minutes}`;
-    }
+      // Массив объектов с комментариями
+      const comments = [
+        {
+          name: "Глеб Фокин",
+          date: "12.02.22 12:18",
+          text: "Это будет первый комментарий на этой странице",
+          likes: { count: 3, active: false },
+        },
+        {
+          name: "Варвара Н.",
+          date: "13.02.22 19:22",
+          text: "Мне нравится как оформлена эта страница! ❤",
+          likes: { count: 75, active: true },
+        },
+      ];
 
-    // Функция для рендера комментариев
-    function renderComments() {
-      const comments = commentsList.querySelectorAll('.comment');
-      comments.forEach(comment => {
-        const likesData = JSON.parse(comment.getAttribute('data-likes'));
-        const likesCounter = comment.querySelector('.likes-counter');
-        const likeButton = comment.querySelector('.like-button');
+      // Функция для получения текущей даты и времени
+      function getCurrentDateTime() {
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = String(now.getFullYear()).slice(-2);
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        return `${day}.${month}.${year} ${hours}:${minutes}`;
+      }
 
-        likesCounter.textContent = likesData.count;
-        likeButton.className = likesData.active ? 'like-button -active-like' : 'like-button';
+      // Функция для рендера комментариев
+      function renderComments() {
+        commentsList.innerHTML = ''; // Очищаем список комментариев
+
+        comments.forEach((comment) => {
+          const commentHtml = `
+            <li class="comment" data-likes='${JSON.stringify(comment.likes)}'>
+              <div class="comment-header">
+                <div>${comment.name}</div>
+                <div>${comment.date}</div>
+              </div>
+              <div class="comment-body">
+                <div class="comment-text">
+                  ${comment.text}
+                </div>
+              </div>
+              <div class="comment-footer">
+                <div class="likes">
+                  <span class="likes-counter">${comment.likes.count}</span>
+                  <button class="like-button ${comment.likes.active ? '-active-like' : ''}"></button>
+                </div>
+              </div>
+            </li>
+          `;
+          commentsList.insertAdjacentHTML('beforeend', commentHtml);
+        });
+      }
+
+      // Обработчик события нажатия на лайк
+      commentsList.addEventListener('click', (event) => {
+        if (event.target.classList.contains('like-button')) {
+          const commentElement = event.target.closest('.comment');
+          const commentIndex = Array.from(commentsList.children).indexOf(commentElement);
+          const comment = comments[commentIndex];
+
+          comment.likes.active = !comment.likes.active;
+          comment.likes.count += comment.likes.active ? 1 : -1;
+
+          renderComments();
+        }
       });
-    }
 
-    // Обработчик события нажатия на лайк
-    commentsList.addEventListener('click', (event) => {
-      if (event.target.classList.contains('like-button')) {
-        const comment = event.target.closest('.comment');
-        let likesData = JSON.parse(comment.getAttribute('data-likes'));
+      // Обработчик события нажатия на кнопку "Добавить"
+      addButton.addEventListener('click', () => {
+        const name = nameInput.value.trim();
+        const text = commentInput.value.trim();
 
-        likesData.active = !likesData.active;
-        likesData.count += likesData.active ? 1 : -1;
+        if (name && text) {
+          const newComment = {
+            name: name,
+            date: getCurrentDateTime(),
+            text: text,
+            likes: { count: 0, active: false },
+          };
 
-        comment.setAttribute('data-likes', JSON.stringify(likesData));
-        renderComments();
-      }
-    });
+          comments.push(newComment);
+          renderComments();
 
-    // Обработчик события нажатия на кнопку "Добавить"
-    addButton.addEventListener('click', () => {
-      const name = nameInput.value.trim();
-      const comment = commentInput.value.trim();
+          nameInput.value = '';
+          commentInput.value = '';
+        }
+      });
 
-      if (name && comment) {
-        const newCommentHtml = `
-          <li class="comment" data-likes='{"count": 0, "active": false}'>
-            <div class="comment-header">
-              <div>${name}</div>
-              <div>${getCurrentDateTime()}</div>
-            </div>
-            <div class="comment-body">
-              <div class="comment-text">
-                ${comment}
-              </div>
-            </div>
-            <div class="comment-footer">
-              <div class="likes">
-                <span class="likes-counter">0</span>
-                <button class="like-button"></button>
-              </div>
-            </div>
-          </li>
-        `;
-        commentsList.insertAdjacentHTML('beforeend', newCommentHtml);
-        nameInput.value = '';
-        commentInput.value = '';
-      } else {
-        alert('Пожалуйста, заполните все поля!');
-      }
-    });
-
-    renderComments(); // начальный рендер комментариев
-  </script>
+      // Первоначальный рендер комментариев
+      renderComments();
+    </script>
+  </body>
 </html>
