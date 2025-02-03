@@ -3,7 +3,7 @@ export const nameInput = document.querySelector('.add-form-name')
 export const commentInput = document.querySelector('.add-form-text')
 export const addButton = document.querySelector('.add-form-button')
 export const commentsList = document.querySelector('.comments')
-import { renderComments } from './renderFunction.js'
+import { renderComments } from './renderFunctions.js'
 
 // Первоначальный рендер комментариев
 renderComments()
