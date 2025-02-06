@@ -1,10 +1,9 @@
 // Функция для рендера комментариев
 import { comments } from './massifs.js'
-import { commentsList } from './index.js'
+import { commentsList } from '../index.js'
 import { escapeHtml } from './functionShielding.js'
 
 export function renderComments() {
-    console.log('Функция запущена ! ')
     commentsList.innerHTML = '' // Очищаем список комментариев
 
     comments.forEach((comment) => {

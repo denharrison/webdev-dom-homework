@@ -1,11 +1,11 @@
-import { commentsList } from './index.js'
-import { renderComments } from './renderFunction.js'
+import { commentsList } from '../index.js'
+import { renderComments } from './renderFunctions.js'
 import { escapeHtml } from './functionShielding.js'
-import { commentInput } from './index.js'
+import { commentInput } from '../index.js'
 import { comments } from './massifs.js'
-import { addButton } from './index.js'
+import { addButton } from '../index.js'
 import { getCurrentDateTime } from './dateFunctions.js'
-import { nameInput } from './index.js'
+import { nameInput } from '../index.js'
 
 // Обработчик события нажатия на лайк
 commentsList.addEventListener('click', (event) => {
