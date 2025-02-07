@@ -1,14 +1,16 @@
-import { commentsList } from '../index.js'
+import {
+    commentsList,
+    commentInput,
+    addButton,
+    nameInput,
+} from './variablesHtml.js'
 import { renderComments } from './renderFunctions.js'
 import { escapeHtml } from './functionShielding.js'
-import { commentInput } from '../index.js'
 import { comments } from './massifs.js'
-import { addButton } from '../index.js'
 import { getCurrentDateTime } from './dateFunctions.js'
-import { nameInput } from '../index.js'
 
 // Обработчик события нажатия на лайк
-commentsList.addEventListener('click', (event) => {
+function handleLikeClick(event) {
     if (event.target.classList.contains('like-button')) {
         const commentElement = event.target.closest('.comment')
         const commentIndex = Array.from(commentsList.children).indexOf(
@@ -21,10 +23,10 @@ commentsList.addEventListener('click', (event) => {
 
         renderComments()
     }
-})
+}
 
 // Обработчик события нажатия на комментарий для цитирования
-commentsList.addEventListener('click', (event) => {
+function handleCommentClick(event) {
     if (
         event.target.classList.contains('comment-text') ||
         event.target.classList.contains('comment-header') ||
@@ -36,15 +38,13 @@ commentsList.addEventListener('click', (event) => {
         )
         const comment = comments[commentIndex]
 
-        commentInput.value = `> ${escapeHtml(comment.name)}: ${escapeHtml(
-            comment.text,
-        )}\\n`
+        commentInput.value = `> ${escapeHtml(comment.name)}: ${escapeHtml(comment.text)}\\\\n`
         commentInput.focus()
     }
-})
+}
 
 // Обработчик события нажатия на кнопку "Добавить"
-addButton.addEventListener('click', () => {
+function handleAddButtonClick() {
     const name = escapeHtml(nameInput.value.trim())
     const text = escapeHtml(commentInput.value.trim())
 
@@ -62,4 +62,11 @@ addButton.addEventListener('click', () => {
         nameInput.value = ''
         commentInput.value = ''
     }
-})
+}
+
+// Добавляем обработчики событий
+export function addEventHandlers() {
+    commentsList.addEventListener('click', handleLikeClick)
+    commentsList.addEventListener('click', handleCommentClick)
+    addButton.addEventListener('click', handleAddButtonClick)
+}
