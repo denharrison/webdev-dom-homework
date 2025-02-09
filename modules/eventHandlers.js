@@ -1,9 +1,7 @@
-import {
-    commentsList,
-    commentInput,
-    addButton,
-    nameInput,
-} from './variablesHtml.js'
+const nameInput = document.querySelector('.add-form-name')
+const commentInput = document.querySelector('.add-form-text')
+const addButton = document.querySelector('.add-form-button')
+const commentsList = document.querySelector('.comments')
 import { renderComments } from './renderFunctions.js'
 import { escapeHtml } from './functionShielding.js'
 import { comments } from './massifs.js'

@@ -1,7 +1,7 @@
 import { comments } from './massifs.js'
-import { commentsList } from './variablesHtml.js'
 import { escapeHtml } from './functionShielding.js'
 import { addEventHandlers } from './eventHandlers.js'
+const commentsList = document.querySelector('.comments')
 
 export function renderComments() {
     commentsList.innerHTML = '' // Очищаем список комментариев
