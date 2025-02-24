@@ -1,7 +1,8 @@
 import { renderComments } from './renderFunctions.js'
 import { escapeHtml } from './functionShielding.js'
-import { comments } from './massifs.js'
+import { comments, updateComments } from './massifs.js'
 import { getCurrentDateTime } from './dateFunctions.js'
+import { getComments, postComment } from './api.js'
 
 // Обработчик события нажатия на лайк
 function handleLikeClick(event) {
@@ -13,8 +14,8 @@ function handleLikeClick(event) {
         )
         const comment = comments[commentIndex]
 
-        comment.likes.active = !comment.likes.active
-        comment.likes.count += comment.likes.active ? 1 : -1
+        comment.isLiked = !comment.isLiked
+        comment.likes += comment.isLiked ? 1 : -1
 
         renderComments()
     }
@@ -55,11 +56,16 @@ function handleAddButtonClick() {
             likes: { count: 0, active: false },
         }
 
-        comments.push(newComment)
-        renderComments()
-
-        nameInput.value = ''
-        commentInput.value = ''
+        postComment(name, text)
+            .then(() => {
+                return getComments()
+            })
+            .then((result) => {
+                updateComments(result)
+                renderComments()
+                nameInput.value = ''
+                commentInput.value = ''
+            })
     }
 }
 

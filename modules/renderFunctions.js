@@ -10,7 +10,7 @@ export function renderComments() {
         const commentHtml = `
             <li class="comment" data-likes='${JSON.stringify(comment.likes)}'>
                 <div class="comment-header">
-                    <div>${escapeHtml(comment.name)}</div>
+                    <div>${escapeHtml(comment.author.name)}</div>
                     <div>${comment.date}</div>
                 </div>
                 <div class="comment-body">
@@ -18,8 +18,8 @@ export function renderComments() {
                 </div>
                 <div class="comment-footer">
                     <div class="likes">
-                        <span class="likes-counter">${comment.likes.count}</span>
-                        <button class="like-button ${comment.likes.active ? '-active-like' : ''}">
+                        <span class="likes-counter">${comment.likes}</span>
+                        <button class="like-button ${comment.isLiked ? '-active-like' : ''}">
                         </button>
                     </div>
                 </div>
