@@ -1,7 +1,6 @@
 import { renderComments } from './renderFunctions.js'
 import { escapeHtml } from './functionShielding.js'
 import { comments, updateComments } from './massifs.js'
-import { getCurrentDateTime } from './dateFunctions.js'
 import { getComments, postComment } from './api.js'
 
 // Обработчик события нажатия на лайк
@@ -47,14 +46,12 @@ function handleAddButtonClick() {
     const commentInput = document.querySelector('.add-form-text')
     const name = escapeHtml(nameInput.value.trim())
     const text = escapeHtml(commentInput.value.trim())
+    const addButton = document.querySelector('.add-form-button') // Получаем кнопку
 
     if (name && text) {
-        const newComment = {
-            name: name,
-            date: getCurrentDateTime(),
-            text: text,
-            likes: { count: 0, active: false },
-        }
+        // Добавляем лоадер
+        addButton.disabled = true // Отключаем кнопку, чтобы избежать повторных нажатий
+        addButton.textContent = 'Отправка...' // Меняем текст кнопки
 
         postComment(name, text)
             .then(() => {
@@ -65,6 +62,14 @@ function handleAddButtonClick() {
                 renderComments()
                 nameInput.value = ''
                 commentInput.value = ''
+            })
+            .catch((error) => {
+                console.error('Ошибка при добавлении комментария:', error)
+            })
+            .finally(() => {
+                // Убираем лоадер в любом случае (успех или ошибка)
+                addButton.disabled = false // Включаем кнопку обратно
+                addButton.textContent = 'Добавить' // Возвращаем исходный текст
             })
     }
 }
