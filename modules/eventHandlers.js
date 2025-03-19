@@ -44,14 +44,15 @@ function handleCommentClick(event) {
 function handleAddButtonClick() {
     const nameInput = document.querySelector('.add-form-name')
     const commentInput = document.querySelector('.add-form-text')
+    const addButton = document.querySelector('.add-form-button')
+
     const name = escapeHtml(nameInput.value.trim())
     const text = escapeHtml(commentInput.value.trim())
-    const addButton = document.querySelector('.add-form-button') // Получаем кнопку
 
     if (name && text) {
-        // Добавляем лоадер
-        addButton.disabled = true // Отключаем кнопку, чтобы избежать повторных нажатий
-        addButton.textContent = 'Отправка...' // Меняем текст кнопки
+        // Отключаем кнопку и меняем её текст
+        addButton.disabled = true
+        addButton.textContent = 'Отправка...'
 
         postComment(name, text)
             .then(() => {
@@ -60,20 +61,37 @@ function handleAddButtonClick() {
             .then((result) => {
                 updateComments(result)
                 renderComments()
+                // Очищаем форму только в случае успешной отправки
                 nameInput.value = ''
                 commentInput.value = ''
             })
             .catch((error) => {
-                console.error('Ошибка при добавлении комментария:', error)
+                console.error('Ошибка:', error)
+
+                // Показываем пользователю сообщение об ошибке
+                if (error.message === 'Failed to fetch') {
+                    alert(
+                        'Проблемы с интернетом. Проверьте подключение и попробуйте снова.',
+                    )
+                } else if (error.message === 'Неверный запрос') {
+                    alert(
+                        'Ошибка: Неверные данные. Проверьте введенные имя и комментарий.',
+                    )
+                } else {
+                    alert(
+                        'Произошла ошибка сервера. Пожалуйста, попробуйте позже.',
+                    )
+                }
             })
             .finally(() => {
-                // Убираем лоадер в любом случае (успех или ошибка)
-                addButton.disabled = false // Включаем кнопку обратно
-                addButton.textContent = 'Добавить' // Возвращаем исходный текст
+                // Включаем кнопку обратно и возвращаем исходный текст
+                addButton.disabled = false
+                addButton.textContent = 'Написать'
             })
+    } else {
+        alert('Пожалуйста, заполните все поля.')
     }
 }
-
 // Добавляем обработчики событий
 export function addEventHandlers() {
     const addButton = document.querySelector('.add-form-button')
