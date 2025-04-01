@@ -19,7 +19,10 @@ export const postComment = (name, text) => {
         if (!response.ok) {
             if (response.status === 400) {
                 return response.json().then((errorData) => {
-                    throw new Error(errorData.error || 'Неверный запрос')
+                    throw new Error(
+                        errorData.error ||
+                            'Валидация не пройдена: имя и комментарий должны быть длиннее 3 символов',
+                    )
                 })
             }
             throw new Error('Ошибка сервера')

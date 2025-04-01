@@ -67,20 +67,19 @@ function handleAddButtonClick() {
             })
             .catch((error) => {
                 console.error('Ошибка:', error)
-
-                // Показываем пользователю сообщение об ошибке
                 if (error.message === 'Failed to fetch') {
                     alert(
                         'Проблемы с интернетом. Проверьте подключение и попробуйте снова.',
                     )
-                } else if (error.message === 'Неверный запрос') {
-                    alert(
-                        'Ошибка: Неверные данные. Проверьте введенные имя и комментарий.',
-                    )
-                } else {
+                } else if (error.message.includes('Валидация не пройдена')) {
+                    // Показываем сообщение из сервера о валидации
+                    alert(error.message)
+                } else if (error.message === 'Ошибка сервера') {
                     alert(
                         'Произошла ошибка сервера. Пожалуйста, попробуйте позже.',
                     )
+                } else {
+                    alert('Неизвестная ошибка: ' + error.message)
                 }
             })
             .finally(() => {

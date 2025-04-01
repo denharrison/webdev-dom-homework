@@ -1,6 +1,7 @@
 import { comments } from './massifs.js'
 import { escapeHtml } from './functionShielding.js'
 import { addEventHandlers } from './eventHandlers.js'
+import { formatDate } from './functionShielding.js'
 
 export function renderComments() {
     const commentsList = document.querySelector('.comments')
@@ -11,7 +12,7 @@ export function renderComments() {
             <li class="comment" data-likes='${JSON.stringify(comment.likes)}'>
                 <div class="comment-header">
                     <div>${escapeHtml(comment.author.name)}</div>
-                    <div>${comment.date}</div>
+                   <div>${formatDate(comment.date)}</div>
                 </div>
                 <div class="comment-body">
                     <div class="comment-text">${escapeHtml(comment.text)}</div>
