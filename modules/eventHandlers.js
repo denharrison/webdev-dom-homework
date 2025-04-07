@@ -2,6 +2,7 @@ import { renderComments } from './renderFunctions.js'
 import { escapeHtml } from './functionShielding.js'
 import { comments, updateComments } from './massifs.js'
 import { getComments, postComment } from './api.js'
+import { user } from '../index.js'
 
 // Обработчик события нажатия на лайк
 function handleLikeClick(event) {
@@ -54,7 +55,7 @@ function handleAddButtonClick() {
         addButton.disabled = true
         addButton.textContent = 'Отправка...'
 
-        postComment(name, text)
+        postComment(name, text, user.token)
             .then(() => {
                 return getComments()
             })

@@ -1,6 +1,5 @@
 import { comments } from './massifs.js'
 import { escapeHtml } from './functionShielding.js'
-import { addEventHandlers } from './eventHandlers.js'
 import { formatDate } from './functionShielding.js'
 
 export function renderComments() {
@@ -28,7 +27,4 @@ export function renderComments() {
         `
         commentsList.insertAdjacentHTML('beforeend', commentHtml)
     })
-
-    // Вызываем функцию для добавления обработчиков событий
-    addEventHandlers()
 }
