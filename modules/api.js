@@ -9,6 +9,10 @@ export const getComments = () => {
             return response.json()
         })
         .then((data) => data.comments)
+        .catch((error) => {
+            alert(`Ошибка загрузки комментариев: ${error.message}`)
+            throw error // Пробрасываем дальше, если нужно
+        })
 }
 
 export const postComment = (name, text, token) => {
@@ -18,18 +22,23 @@ export const postComment = (name, text, token) => {
         headers: {
             Authorization: 'Bearer ' + token,
         },
-    }).then((response) => {
-        if (!response.ok) {
-            if (response.status === 400) {
-                return response.json().then((errorData) => {
-                    throw new Error(
-                        errorData.error ||
-                            'Валидация не пройдена: имя и комментарий должны быть длиннее 3 символов',
-                    )
-                })
-            }
-            throw new Error('Ошибка сервера')
-        }
-        return response.json()
     })
+        .then((response) => {
+            if (!response.ok) {
+                if (response.status === 400) {
+                    return response.json().then((errorData) => {
+                        throw new Error(
+                            errorData.error ||
+                                'Валидация не пройдена: имя и комментарий должны быть длиннее 3 символов',
+                        )
+                    })
+                }
+                throw new Error('Ошибка сервера')
+            }
+            return response.json()
+        })
+        .catch((error) => {
+            alert(`Ошибка отправки комментария: ${error.message}`)
+            throw error
+        })
 }
