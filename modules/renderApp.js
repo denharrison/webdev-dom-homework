@@ -11,15 +11,24 @@ export const renderApp = () => {
         <div class="form"></div>
     `
 
+    // Переносим проверку первого запуска после создания элемента
+    const loadingMessage = document.getElementById('loading-message')
+    if (!localStorage.getItem('isInitialLoad')) {
+        loadingMessage.style.display = 'block'
+        localStorage.setItem('isInitialLoad', 'true')
+    } else {
+        loadingMessage.style.display = 'none' // Скрываем, если не первый запуск
+    }
+
     getComments()
         .then((result) => {
             updateComments(result)
             renderComments()
-            document.getElementById('loading-message').style.display = 'none'
+            loadingMessage.style.display = 'none'
             renderForm()
         })
         .catch((error) => {
-            document.getElementById('loading-message').textContent =
+            loadingMessage.textContent =
                 'Не удалось загрузить комментарии. Попробуйте позже.'
             console.error(error)
         })

@@ -1,13 +1,13 @@
 import { renderApp } from './modules/renderApp.js'
 
-export let user = null
-export const setUser = (value) => {
-    user = value
+export let user = JSON.parse(localStorage.getItem('user')) || null
+export const setUser = (newUser) => {
+    user = newUser
+    if (newUser) {
+        localStorage.setItem('user', JSON.stringify(newUser))
+    } else {
+        localStorage.removeItem('user')
+    }
 }
 
-// Проверяем, был ли уже выполнен первый запуск
-if (!localStorage.getItem('isInitialLoad')) {
-    document.getElementById('loading-message').style.display = 'block'
-    localStorage.setItem('isInitialLoad', 'true')
-}
 renderApp()
