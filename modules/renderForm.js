@@ -1,10 +1,13 @@
 import { user, setUser } from '../index.js'
 import { addEventHandlers } from './eventHandlers.js'
 import { renderLogin } from './renderLogin.js'
+import { renderApp } from './renderApp.js'
 
 export const renderForm = () => {
-    const container = document.querySelector('.form')
-    container.innerHTML = `
+    const formContainer = document.querySelector('.form')
+    if (!formContainer) return
+
+    formContainer.innerHTML = `
         <div class="add-form">
             <input
                 type="text"
@@ -24,28 +27,25 @@ export const renderForm = () => {
             </div>
         </div>
         ${
-            !user
-                ? `
-        <p class="auth-message">
-            <a id="auth-link" href="#">Авторизуйтесь</a> пожалуйста
-        </p>
-        `
+            !user?.token
+                ? `<p class="auth-message">
+                      <a id="auth-link" href="#">Авторизуйтесь</a> пожалуйста
+                   </p>`
                 : ''
         }
     `
 
-    if (user?.token) {
-        document
-            .querySelector('.logout-button')
-            .addEventListener('click', () => {
-                setUser(null)
-                renderForm()
-            })
-    } else if (!user) {
-        document
-            .getElementById('auth-link')
-            ?.addEventListener('click', renderLogin)
-    }
+    // Обработчик выхода
+    document.querySelector('.logout-button')?.addEventListener('click', () => {
+        setUser(null)
+        renderApp() // Полный перерендер приложения
+    })
+
+    // Обработчик ссылки авторизации
+    document.getElementById('auth-link')?.addEventListener('click', (e) => {
+        e.preventDefault()
+        renderLogin()
+    })
 
     addEventHandlers()
 }
